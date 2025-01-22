@@ -7,6 +7,7 @@ from collections import deque
 from rcu_lib_module.RCU_protocol import RCU_MessageStructure, RCU_MessageStructureConstants
 from rcu_lib_module.RCU_protocol_ring_buffer import RCU_Msg_RingBuffer
 from rcu_lib_module.RCU_API import RCU_API
+from RCU_API_extended import RCU_API_Extended
 
 PRIORITY_QUERY = 1
 PRIORITY_EVENT = 2
@@ -56,15 +57,22 @@ class RCUSimulator:
             if query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.General.Q_GTIN:
                 gtin = f"GTIN{random.randint(1000, 9999)}".encode('ascii')
                 print(f"Generated GTIN response: {gtin.decode()}")
+                RCU_API_Extended.FB_device_GTIN(response_msg, gtin)
                 
-                response_msg.cmd_type_no = RCU_MessageStructureConstants.CMD_Type_No.Query
-                response_msg.cmd_no = RCU_MessageStructureConstants.CMD_No.General
-                response_msg.sub_cmd_no = RCU_MessageStructureConstants.Sub_CMD_No.Query.General.FB_GTIN
-                response_msg.data = gtin
+            elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.General.Q_Serial_Number:
+                serial = f"SN{random.randint(10000, 99999)}".encode('ascii')
+                print(f"Generated Serial Number response: {serial.decode()}")
+                RCU_API_Extended.FB_device_serial_number(response_msg, serial)
                 
+            elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.General.Q_Software_Version:
+                version = f"V{random.randint(1,9)}.{random.randint(0,9)}.{random.randint(0,9)}".encode('ascii')
+                print(f"Generated Version response: {version.decode()}")
+                RCU_API_Extended.FB_software_version(response_msg, version)
+                
+            if response_msg.cmd_type_no:  # If a response was created
                 print(f"Response message: {response_msg.Wrap().hex()}")
                 return response_msg
-                
+                    
         return None
 
 def process_message_queue(message_queue, rcu_simulator):

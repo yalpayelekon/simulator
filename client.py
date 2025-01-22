@@ -11,6 +11,22 @@ def create_gtin_query():
     print(f"Message details - Type: {msg.cmd_type_no.name}, CMD: {msg.cmd_no.name}, SubCMD: {msg.sub_cmd_no.name}")
     return wrapped_msg
 
+def create_serial_query():
+    msg = RCU_MessageStructure()
+    RCU_API.Q_device_serial_number(msg, bytes([]))
+    wrapped_msg = msg.Wrap()
+    print(f"\nCreated Serial Number query: {wrapped_msg.hex()}")
+    print(f"Message details - Type: {msg.cmd_type_no.name}, CMD: {msg.cmd_no.name}, SubCMD: {msg.sub_cmd_no.name}")
+    return wrapped_msg
+
+def create_version_query():
+    msg = RCU_MessageStructure()
+    RCU_API.Q_software_version(msg, bytes([]))
+    wrapped_msg = msg.Wrap()
+    print(f"\nCreated Version query: {wrapped_msg.hex()}")
+    print(f"Message details - Type: {msg.cmd_type_no.name}, CMD: {msg.cmd_no.name}, SubCMD: {msg.sub_cmd_no.name}")
+    return wrapped_msg
+
 def parse_message(message_bytes):
     try:
         print(f"\nParsing message: {message_bytes.hex()}")
@@ -33,11 +49,17 @@ def parse_message(message_bytes):
                 return f"EVENT: Invalid data length: {msg.data.hex()}"
                 
         elif msg.cmd_type_no == RCU_MessageStructureConstants.CMD_Type_No.Query:
-            if (msg.cmd_no == RCU_MessageStructureConstants.CMD_No.General and 
-                msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.General.FB_GTIN):
-                gtin_data = msg.data.decode('ascii').strip('\0\n')
-                return f"QUERY RESPONSE: GTIN = {gtin_data}"
-            return f"QUERY: Unknown sub-command: {msg.sub_cmd_no.name}"
+            if msg.cmd_no == RCU_MessageStructureConstants.CMD_No.General:
+                if msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.General.FB_GTIN:
+                    gtin_data = msg.data.decode('ascii').strip('\0\n')
+                    return f"QUERY RESPONSE: GTIN = {gtin_data}"
+                elif msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.General.FB_SerialNumber:
+                    sn_data = msg.data.decode('ascii').strip('\0\n')
+                    return f"QUERY RESPONSE: Serial Number = {sn_data}"
+                elif msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.General.FB_Version:
+                    version_data = msg.data.decode('ascii').strip('\0\n')
+                    return f"QUERY RESPONSE: Version = {version_data}"
+                return f"QUERY: Unknown sub-command: {msg.sub_cmd_no.name}"
                 
         return f"Unknown message type: {msg.cmd_type_no.name}"
     except Exception as e:
@@ -71,17 +93,31 @@ def run_client():
     receive_thread.start()
 
     print("\nConnected to server.")
-    print("Press Enter to send GTIN query, 'q' to quit")
+    print("Commands:")
+    print("  1 - Send GTIN query")
+    print("  2 - Send Serial Number query")
+    print("  3 - Send Version query")
+    print("  q - Quit")
 
     try:
         while True:
-            command = input()
+            command = input("Enter command: ")
             if command.lower() == 'q':
                 break
             
-            query = create_gtin_query()
-            client_socket.send(query)
-            print("Sent GTIN query")
+            query = None
+            if command == '1':
+                query = create_gtin_query()
+            elif command == '2':
+                query = create_serial_query()
+            elif command == '3':
+                query = create_version_query()
+                
+            if query:
+                client_socket.send(query)
+                print("Query sent")
+            else:
+                print("Invalid command")
             
     except KeyboardInterrupt:
         print("\nDisconnecting from server...")
