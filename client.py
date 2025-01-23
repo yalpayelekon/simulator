@@ -8,7 +8,6 @@ def create_gtin_query():
     RCU_API.Q_device_GTIN(msg, bytes([]))
     wrapped_msg = msg.Wrap()
     print(f"\nCreated GTIN query: {wrapped_msg.hex()}")
-    print(f"Message details - Type: {msg.cmd_type_no.name}, CMD: {msg.cmd_no.name}, SubCMD: {msg.sub_cmd_no.name}")
     return wrapped_msg
 
 def create_serial_query():
@@ -16,7 +15,6 @@ def create_serial_query():
     RCU_API.Q_device_serial_number(msg, bytes([]))
     wrapped_msg = msg.Wrap()
     print(f"\nCreated Serial Number query: {wrapped_msg.hex()}")
-    print(f"Message details - Type: {msg.cmd_type_no.name}, CMD: {msg.cmd_no.name}, SubCMD: {msg.sub_cmd_no.name}")
     return wrapped_msg
 
 def create_version_query():
@@ -24,7 +22,6 @@ def create_version_query():
     RCU_API.Q_software_version(msg, bytes([]))
     wrapped_msg = msg.Wrap()
     print(f"\nCreated Version query: {wrapped_msg.hex()}")
-    print(f"Message details - Type: {msg.cmd_type_no.name}, CMD: {msg.cmd_no.name}, SubCMD: {msg.sub_cmd_no.name}")
     return wrapped_msg
 
 def parse_message(message_bytes):
@@ -36,7 +33,6 @@ def parse_message(message_bytes):
             return f"Failed to parse message: {message_bytes.hex()}"
         
         print(f"Parsed message - Type: {msg.cmd_type_no.name}, CMD: {msg.cmd_no.name}, SubCMD: {msg.sub_cmd_no.name}")
-        print(f"Data: {msg.data.hex() if msg.data else 'None'}")
             
         if msg.cmd_type_no == RCU_MessageStructureConstants.CMD_Type_No.Events:
             if (msg.cmd_no == RCU_MessageStructureConstants.CMD_No.OnboardDevice and 
@@ -53,10 +49,10 @@ def parse_message(message_bytes):
                 if msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.General.FB_GTIN:
                     gtin_data = msg.data.decode('ascii').strip('\0\n')
                     return f"QUERY RESPONSE: GTIN = {gtin_data}"
-                elif msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.General.FB_SerialNumber:
+                elif msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.General.FB_Serial_Number:
                     sn_data = msg.data.decode('ascii').strip('\0\n')
                     return f"QUERY RESPONSE: Serial Number = {sn_data}"
-                elif msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.General.FB_Version:
+                elif msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.General.FB_Software_Version:
                     version_data = msg.data.decode('ascii').strip('\0\n')
                     return f"QUERY RESPONSE: Version = {version_data}"
                 return f"QUERY: Unknown sub-command: {msg.sub_cmd_no.name}"
@@ -77,7 +73,6 @@ def receive_messages(client_socket):
                 break
             
             parsed_message = parse_message(message)
-            print(f"Received: {parsed_message}")
             
         except Exception as e:
             print(f"Error receiving message: {str(e)}")
@@ -86,7 +81,7 @@ def receive_messages(client_socket):
 
 def run_client():
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client_socket.connect(('localhost', 5000))
+    client_socket.connect(('localhost', 5001))
 
     receive_thread = threading.Thread(target=receive_messages, args=(client_socket,))
     receive_thread.daemon = True

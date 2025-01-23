@@ -13,12 +13,12 @@ class RCU_API_Extended(RCU_API):
     def FB_device_serial_number(obj: RCU_MessageStructure, data: bytes):
         RCU_API._RCU_API__SetQUERY(obj)
         RCU_API._RCU_API__SetGeneral(obj)
-        obj.sub_cmd_no = RCU_MessageStructureConstants.Sub_CMD_No.Query.General.FB_SerialNumber
+        obj.sub_cmd_no = RCU_MessageStructureConstants.Sub_CMD_No.Query.General.FB_Serial_Number
         obj.data = data
 
     @staticmethod
     def FB_software_version(obj: RCU_MessageStructure, data: bytes):
         RCU_API._RCU_API__SetQUERY(obj)
         RCU_API._RCU_API__SetGeneral(obj)
-        obj.sub_cmd_no = RCU_MessageStructureConstants.Sub_CMD_No.Query.General.FB_Version
+        obj.sub_cmd_no = RCU_MessageStructureConstants.Sub_CMD_No.Query.General.FB_Software_Version
         obj.data = data

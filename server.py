@@ -3,10 +3,8 @@ import threading
 import time
 import random
 import queue
-from collections import deque
 from rcu_lib_module.RCU_protocol import RCU_MessageStructure, RCU_MessageStructureConstants
 from rcu_lib_module.RCU_protocol_ring_buffer import RCU_Msg_RingBuffer
-from rcu_lib_module.RCU_API import RCU_API
 from RCU_API_extended import RCU_API_Extended
 
 PRIORITY_QUERY = 1
@@ -139,9 +137,9 @@ def send_events(client_socket, message_queue, rcu_simulator):
 
 def run_server():
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.bind(('localhost', 5000))
+    server_socket.bind(('localhost', 5001))
     server_socket.listen(5)
-    print("\nServer is listening on localhost:5000")
+    print("\nServer is listening on localhost:5001")
 
     message_queue = queue.PriorityQueue()
     rcu_simulator = RCUSimulator()
