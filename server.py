@@ -48,29 +48,73 @@ class RCUSimulator:
     def handle_query(self, query_msg: RCU_MessageStructure):
         print(f"\nHandling query - Type: {query_msg.cmd_type_no.name}, CMD: {query_msg.cmd_no.name}, SubCMD: {query_msg.sub_cmd_no.name}")
         response_msg = RCU_MessageStructure()
-        
-        if (query_msg.cmd_type_no == RCU_MessageStructureConstants.CMD_Type_No.Query and 
+
+        if (query_msg.cmd_type_no == RCU_MessageStructureConstants.CMD_Type_No.Query and
             query_msg.cmd_no == RCU_MessageStructureConstants.CMD_No.General):
-            
+
+            # Existing handlers
             if query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.General.Q_GTIN:
                 gtin = f"GTIN{random.randint(1000, 9999)}".encode('ascii')
                 print(f"Generated GTIN response: {gtin.decode()}")
                 RCU_API_Extended.FB_device_GTIN(response_msg, gtin)
-                
+
             elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.General.Q_Serial_Number:
                 serial = f"SN{random.randint(10000, 99999)}".encode('ascii')
                 print(f"Generated Serial Number response: {serial.decode()}")
                 RCU_API_Extended.FB_device_serial_number(response_msg, serial)
-                
+
             elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.General.Q_Software_Version:
                 version = f"V{random.randint(1,9)}.{random.randint(0,9)}.{random.randint(0,9)}".encode('ascii')
                 print(f"Generated Version response: {version.decode()}")
                 RCU_API_Extended.FB_software_version(response_msg, version)
-                
+
+            # New handlers
+            elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.General.Q_Hardware_Version:
+                hw_version = f"HW{random.randint(1,9)}.{random.randint(0,9)}".encode('ascii')
+                print(f"Generated Hardware Version response: {hw_version.decode()}")
+                RCU_API_Extended.FB_hardware_version(response_msg, hw_version)
+
+            elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.General.Q_SW_Commit_SHA:
+                commit_sha = f"{hex(random.randint(0, 16**40))[2:].zfill(40)}".encode('ascii')
+                print(f"Generated SW Commit SHA response: {commit_sha.decode()}")
+                RCU_API_Extended.FB_SW_commit_SHA(response_msg, commit_sha)
+
+            elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.General.Q_SW_Author:
+                authors = ["john.doe", "jane.smith", "bob.wilson", "alice.johnson"]
+                author = random.choice(authors).encode('ascii')
+                print(f"Generated SW Author response: {author.decode()}")
+                RCU_API_Extended.FB_SW_author(response_msg, author)
+
+            elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.General.Q_Last_Commit_Date:
+                date = f"20{random.randint(20,23)}-{random.randint(1,12):02d}-{random.randint(1,28):02d}".encode('ascii')
+                print(f"Generated Last Commit Date response: {date.decode()}")
+                RCU_API_Extended.FB_last_commit_date(response_msg, date)
+
+            elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.General.Q_PowerSourcePeriod:
+                period = str(random.randint(45, 65)).encode('ascii')  # Hz
+                print(f"Generated Power Source Period response: {period.decode()}Hz")
+                RCU_API_Extended.FB_power_source_period(response_msg, period)
+
+            elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.General.Q_DeviceName:
+                device_names = ["RCU_Main", "RCU_Backup", "RCU_Test", "RCU_Debug"]
+                name = random.choice(device_names).encode('ascii')
+                print(f"Generated Device Name response: {name.decode()}")
+                RCU_API_Extended.FB_device_name(response_msg, name)
+
+            elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.General.Q_HardFault1:
+                fault_data = bytes([random.randint(0, 255) for _ in range(4)])  # 4 bytes of fault data
+                print(f"Generated HardFault1 response: {fault_data.hex()}")
+                RCU_API_Extended.FB_hardfault_1(response_msg, fault_data)
+
+            elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.General.Q_DatabaseInfo:
+                db_info = f"DB_Ver_{random.randint(1,9)}.{random.randint(0,9)}".encode('ascii')
+                print(f"Generated Database Info response: {db_info.decode()}")
+                RCU_API_Extended.FB_database_info(response_msg, db_info)
+
             if response_msg.cmd_type_no:  # If a response was created
                 print(f"Response message: {response_msg.Wrap().hex()}")
                 return response_msg
-                    
+
         return None
 
 def process_message_queue(message_queue, rcu_simulator):
