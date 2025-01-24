@@ -211,28 +211,28 @@ def create_dali_device_masthead_query():
 
 def create_dali_gear_nvm_query():
     msg = RCU_MessageStructure()
-    RCU_API.Q_dali_gear_nvm(msg, bytes([0]))  # Query for first gear
+    RCU_API.Q_dali_gear_nvm_content(msg, bytes([0]))  # Query for first gear
     wrapped_msg = msg.Wrap()
     print(f"\nCreated DALI Gear NVM query: {wrapped_msg.hex()}")
     return wrapped_msg
 
 def create_dali_gear_ram_query():
     msg = RCU_MessageStructure()
-    RCU_API.Q_dali_gear_ram(msg, bytes([0]))  # Query for first gear
+    RCU_API.Q_dali_gear_ram_content(msg, bytes([0]))  # Query for first gear
     wrapped_msg = msg.Wrap()
     print(f"\nCreated DALI Gear RAM query: {wrapped_msg.hex()}")
     return wrapped_msg
 
 def create_dali_input_nvm_query():
     msg = RCU_MessageStructure()
-    RCU_API.Q_dali_input_nvm(msg, bytes([0]))  # Query for first input
+    RCU_API.Q_dali_input_nvm_content(msg, bytes([0]))  # Query for first input
     wrapped_msg = msg.Wrap()
     print(f"\nCreated DALI Input NVM query: {wrapped_msg.hex()}")
     return wrapped_msg
 
 def create_dali_device_name_query():
     msg = RCU_MessageStructure()
-    RCU_API.Q_dali_device_name(msg, bytes([0]))  # Query for first device
+    RCU_API.Q_dali_device_obj_name(msg, bytes([0]))  # Query for first device
     wrapped_msg = msg.Wrap()
     print(f"\nCreated DALI Device Name query: {wrapped_msg.hex()}")
     return wrapped_msg
@@ -247,21 +247,21 @@ def create_dali_gear_feature_query():
 # Occupancy Query Functions
 def create_occupancy_duration_query():
     msg = RCU_MessageStructure()
-    RCU_API.Q_occupancy_duration(msg, bytes([]))
+    RCU_API.Q_ocuupancy_duration(msg, bytes([]))
     wrapped_msg = msg.Wrap()
     print(f"\nCreated Occupancy Duration query: {wrapped_msg.hex()}")
     return wrapped_msg
 
 def create_room_situation_query():
     msg = RCU_MessageStructure()
-    RCU_API.Q_room_situation(msg, bytes([]))
+    RCU_API.Q_occupancy_room_situation(msg, bytes([]))
     wrapped_msg = msg.Wrap()
     print(f"\nCreated Room Situation query: {wrapped_msg.hex()}")
     return wrapped_msg
 
 def create_door_position_query():
     msg = RCU_MessageStructure()
-    RCU_API.Q_door_position(msg, bytes([]))
+    RCU_API.Q_occupancy_door_position(msg, bytes([]))
     wrapped_msg = msg.Wrap()
     print(f"\nCreated Door Position query: {wrapped_msg.hex()}")
     return wrapped_msg
@@ -269,7 +269,7 @@ def create_door_position_query():
 # DND App Query Function
 def create_dnd_summary_query():
     msg = RCU_MessageStructure()
-    RCU_API.Q_dnd_summary(msg, bytes([]))
+    RCU_API.Q_dndapp_summary(msg, bytes([]))
     wrapped_msg = msg.Wrap()
     print(f"\nCreated DND Summary query: {wrapped_msg.hex()}")
     return wrapped_msg
@@ -284,7 +284,7 @@ def create_modbus_device_masthead_query():
 
 def create_modbus_register_address_query():
     msg = RCU_MessageStructure()
-    RCU_API.Q_modbus_register_address(msg, bytes([0]))  # Query for first register
+    RCU_API.Q_modbus_device_reg_add(msg, bytes([0]))  # Query for first register
     wrapped_msg = msg.Wrap()
     print(f"\nCreated Modbus Register Address query: {wrapped_msg.hex()}")
     return wrapped_msg
