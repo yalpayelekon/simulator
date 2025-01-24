@@ -32,7 +32,7 @@ def run_client():
 
     try:
         for query_name, query_func in query_functions.items():
-            delay = random.uniform(0, 2)
+            delay = random.uniform(0.2, 1.2)
             
             print(f"\nSending {query_name} query...")
             query = query_func()
