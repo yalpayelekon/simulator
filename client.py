@@ -80,6 +80,84 @@ def create_database_info_query():
     print(f"\nCreated Database Info query: {wrapped_msg.hex()}")
     return wrapped_msg
 
+def create_ethernet_config_query():
+    msg = RCU_MessageStructure()
+    RCU_API.Q_ethernet_config(msg, bytes([]))
+    wrapped_msg = msg.Wrap()
+    print(f"\nCreated Ethernet Config query: {wrapped_msg.hex()}")
+    return wrapped_msg
+
+# Onboard Device query functions
+def create_application_state_query():
+    msg = RCU_MessageStructure()
+    RCU_API.Q_onboard_application_state(msg, bytes([]))
+    wrapped_msg = msg.Wrap()
+    print(f"\nCreated Application State query: {wrapped_msg.hex()}")
+    return wrapped_msg
+
+def create_masthead_query():
+    msg = RCU_MessageStructure()
+    RCU_API.Q_onboard_devices_masthead(msg, bytes([]))
+    wrapped_msg = msg.Wrap()
+    print(f"\nCreated Masthead query: {wrapped_msg.hex()}")
+    return wrapped_msg
+
+def create_output_groups_query():
+    msg = RCU_MessageStructure()
+    RCU_API.Q_onboard_output_groups(msg, [0])  # Query for first group
+    wrapped_msg = msg.Wrap()
+    print(f"\nCreated Output Groups query: {wrapped_msg.hex()}")
+    return wrapped_msg
+
+def create_input_groups_query():
+    msg = RCU_MessageStructure()
+    RCU_API.Q_onboard_input_groups(msg, [0])  # Query for first group
+    wrapped_msg = msg.Wrap()
+    print(f"\nCreated Input Groups query: {wrapped_msg.hex()}")
+    return wrapped_msg
+
+def create_input_instance_behaviour_query():
+    msg = RCU_MessageStructure()
+    RCU_API.Q_onboard_input_instance_behaviour(msg, [0])  # Query for first instance
+    wrapped_msg = msg.Wrap()
+    print(f"\nCreated Input Instance Behaviour query: {wrapped_msg.hex()}")
+    return wrapped_msg
+
+def create_output_scenes_query():
+    msg = RCU_MessageStructure()
+    RCU_API.Q_onboard_output_scenes(msg, [0])  # Query for first scene
+    wrapped_msg = msg.Wrap()
+    print(f"\nCreated Output Scenes query: {wrapped_msg.hex()}")
+    return wrapped_msg
+
+def create_output_features_query():
+    msg = RCU_MessageStructure()
+    RCU_API.Q_onboard_output_features(msg, [0])  # Query for first feature set
+    wrapped_msg = msg.Wrap()
+    print(f"\nCreated Output Features query: {wrapped_msg.hex()}")
+    return wrapped_msg
+
+def create_output_triac_run_methode_query():
+    msg = RCU_MessageStructure()
+    RCU_API.Q_onboard_output_triac_run_methode(msg, [0])  # Query for first triac
+    wrapped_msg = msg.Wrap()
+    print(f"\nCreated Output Triac Run Method query: {wrapped_msg.hex()}")
+    return wrapped_msg
+
+def create_onboard_device_name_query():
+    msg = RCU_MessageStructure()
+    RCU_API.Q_onboard_device_name(msg, [0])  # Query for first device
+    wrapped_msg = msg.Wrap()
+    print(f"\nCreated Onboard Device Name query: {wrapped_msg.hex()}")
+    return wrapped_msg
+
+def create_output_obj_feature_query():
+    msg = RCU_MessageStructure()
+    RCU_API.Q_onboard_output_obj_features(msg, [0])  # Query for first object
+    wrapped_msg = msg.Wrap()
+    print(f"\nCreated Output Object Feature query: {wrapped_msg.hex()}")
+    return wrapped_msg
+
 def parse_message(message_bytes):
     try:
         print(f"\nParsing message: {message_bytes.hex()}")
@@ -136,6 +214,59 @@ def parse_message(message_bytes):
                     db_info = msg.data.decode('ascii').strip('\0\n')
                     return f"QUERY RESPONSE: Database Info = {db_info}"
                 
+            # Handle Ethernet
+            elif msg.cmd_no == RCU_MessageStructureConstants.CMD_No.Eternet:
+                if msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.Eternet.FB_EternetConfig:
+                    config_data = msg.data.decode('ascii').strip('\0\n').split(';')
+                    return (f"QUERY RESPONSE: Ethernet Config:\n"
+                           f"  IP: {config_data[0]}\n"
+                           f"  MAC: {config_data[1]}\n"
+                           f"  Mask: {config_data[2]}\n"
+                           f"  Gateway: {config_data[3]}")
+
+            # Handle Onboard Devices
+            elif msg.cmd_no == RCU_MessageStructureConstants.CMD_No.OnboardDevice:
+                if msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.OnboardDevice.FB_ApplicationState:
+                    state = msg.data.decode('ascii').strip('\0\n')
+                    return f"QUERY RESPONSE: Application State = {state}"
+
+                elif msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.OnboardDevice.FB_Masthead:
+                    masthead = msg.data.decode('ascii').strip('\0\n')
+                    return f"QUERY RESPONSE: Masthead = {masthead}"
+
+                elif msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.OnboardDevice.FB_OutputGroups:
+                    groups = ' '.join([f"0x{b:02x}" for b in msg.data])
+                    return f"QUERY RESPONSE: Output Groups = {groups}"
+
+                elif msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.OnboardDevice.FB_InputGroups:
+                    groups = ' '.join([f"0x{b:02x}" for b in msg.data])
+                    return f"QUERY RESPONSE: Input Groups = {groups}"
+
+                elif msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.OnboardDevice.FB_InputInstanceBehaviour:
+                    behaviors = ' '.join([f"0x{b:02x}" for b in msg.data])
+                    return f"QUERY RESPONSE: Input Instance Behaviours = {behaviors}"
+
+                elif msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.OnboardDevice.FB_OutputScenes:
+                    scenes = ' '.join([f"0x{b:02x}" for b in msg.data])
+                    return f"QUERY RESPONSE: Output Scenes = {scenes}"
+
+                elif msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.OnboardDevice.FB_OutputFeatures:
+                    features = ' '.join([f"0x{b:02x}" for b in msg.data])
+                    return f"QUERY RESPONSE: Output Features = {features}"
+
+                elif msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.OnboardDevice.FB_OutputTriacRunMethode:
+                    method_map = {0: "Leading", 1: "Trailing", 2: "Auto"}
+                    method = method_map.get(msg.data[0], "Unknown")
+                    return f"QUERY RESPONSE: Output Triac Run Method = {method}"
+
+                elif msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.OnboardDevice.FB_DeviceName:
+                    name = msg.data.decode('ascii').strip('\0\n')
+                    return f"QUERY RESPONSE: Onboard Device Name = {name}"
+
+                elif msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.OnboardDevice.FB_OutputObjFeature:
+                    features = ' '.join([f"0x{b:02x}" for b in msg.data])
+                    return f"QUERY RESPONSE: Output Object Features = {features}"
+                
                 return f"QUERY: Unknown sub-command: {msg.sub_cmd_no.name}"
 
         return f"Unknown message type: {msg.cmd_type_no.name}"
@@ -181,6 +312,17 @@ def run_client():
     print("  9 - Send Device Name query")
     print("  10 - Send Hardfault1 query")
     print("  11 - Send Database Info query")
+    print("  12 - Send Ethernet Config query")
+    print("  13 - Send Application State query")
+    print("  14 - Send Masthead query")
+    print("  15 - Send Output Groups query")
+    print("  16 - Send Input Groups query")
+    print("  17 - Send Input Instance Behaviour query")
+    print("  18 - Send Output Scenes query")
+    print("  19 - Send Output Features query")
+    print("  20 - Send Output Triac Run Method query")
+    print("  21 - Send Onboard Device Name query")
+    print("  22 - Send Output Object Feature query")
     print("  q - Quit")
 
     try:
@@ -211,6 +353,28 @@ def run_client():
                 query = create_hardfault1_query()
             elif command == '11':
                 query = create_database_info_query()
+            elif command == '12':
+                query = create_ethernet_config_query()
+            elif command == '13':
+                query = create_application_state_query()
+            elif command == '14':
+                query = create_masthead_query()
+            elif command == '15':
+                query = create_output_groups_query()
+            elif command == '16':
+                query = create_input_groups_query()
+            elif command == '17':
+                query = create_input_instance_behaviour_query()
+            elif command == '18':
+                query = create_output_scenes_query()
+            elif command == '19':
+                query = create_output_features_query()
+            elif command == '20':
+                query = create_output_triac_run_methode_query()
+            elif command == '21':
+                query = create_onboard_device_name_query()
+            elif command == '22':
+                query = create_output_obj_feature_query()
 
             if query:
                 client_socket.send(query)

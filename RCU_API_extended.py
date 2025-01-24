@@ -78,3 +78,82 @@ class RCU_API_Extended(RCU_API):
         RCU_API._RCU_API__SetGeneral(obj)
         obj.sub_cmd_no = RCU_MessageStructureConstants.Sub_CMD_No.Query.General.FB_DatabaseInfo
         obj.data = data
+
+    # Ethernet Feedback Methods
+    @staticmethod
+    def FB_ethernet_config(obj: RCU_MessageStructure, data: bytes):
+        RCU_API._RCU_API__SetQUERY(obj)
+        RCU_API._RCU_API__SetEternet(obj)
+        obj.sub_cmd_no = RCU_MessageStructureConstants.Sub_CMD_No.Query.Eternet.FB_EternetConfig
+        obj.data = data
+
+    # Onboard Device Feedback Methods
+    @staticmethod
+    def FB_application_state(obj: RCU_MessageStructure, data: bytes):
+        RCU_API._RCU_API__SetQUERY(obj)
+        RCU_API._RCU_API__SetOnboardDevice(obj)
+        obj.sub_cmd_no = RCU_MessageStructureConstants.Sub_CMD_No.Query.OnboardDevice.FB_ApplicationState
+        obj.data = data
+
+    @staticmethod
+    def FB_masthead(obj: RCU_MessageStructure, data: bytes):
+        RCU_API._RCU_API__SetQUERY(obj)
+        RCU_API._RCU_API__SetOnboardDevice(obj)
+        obj.sub_cmd_no = RCU_MessageStructureConstants.Sub_CMD_No.Query.OnboardDevice.FB_Masthead
+        obj.data = data
+
+    @staticmethod
+    def FB_output_groups(obj: RCU_MessageStructure, data: bytes):
+        RCU_API._RCU_API__SetQUERY(obj)
+        RCU_API._RCU_API__SetOnboardDevice(obj)
+        obj.sub_cmd_no = RCU_MessageStructureConstants.Sub_CMD_No.Query.OnboardDevice.FB_OutputGroups
+        obj.data = data
+
+    @staticmethod
+    def FB_input_groups(obj: RCU_MessageStructure, data: bytes):
+        RCU_API._RCU_API__SetQUERY(obj)
+        RCU_API._RCU_API__SetOnboardDevice(obj)
+        obj.sub_cmd_no = RCU_MessageStructureConstants.Sub_CMD_No.Query.OnboardDevice.FB_InputGroups
+        obj.data = data
+
+    @staticmethod
+    def FB_input_instance_behaviour(obj: RCU_MessageStructure, data: bytes):
+        RCU_API._RCU_API__SetQUERY(obj)
+        RCU_API._RCU_API__SetOnboardDevice(obj)
+        obj.sub_cmd_no = RCU_MessageStructureConstants.Sub_CMD_No.Query.OnboardDevice.FB_InputInstanceBehaviour
+        obj.data = data
+
+    @staticmethod
+    def FB_output_scenes(obj: RCU_MessageStructure, data: bytes):
+        RCU_API._RCU_API__SetQUERY(obj)
+        RCU_API._RCU_API__SetOnboardDevice(obj)
+        obj.sub_cmd_no = RCU_MessageStructureConstants.Sub_CMD_No.Query.OnboardDevice.FB_OutputScenes
+        obj.data = data
+
+    @staticmethod
+    def FB_output_features(obj: RCU_MessageStructure, data: bytes):
+        RCU_API._RCU_API__SetQUERY(obj)
+        RCU_API._RCU_API__SetOnboardDevice(obj)
+        obj.sub_cmd_no = RCU_MessageStructureConstants.Sub_CMD_No.Query.OnboardDevice.FB_OutputFeatures
+        obj.data = data
+
+    @staticmethod
+    def FB_output_triac_run_methode(obj: RCU_MessageStructure, data: bytes):
+        RCU_API._RCU_API__SetQUERY(obj)
+        RCU_API._RCU_API__SetOnboardDevice(obj)
+        obj.sub_cmd_no = RCU_MessageStructureConstants.Sub_CMD_No.Query.OnboardDevice.FB_OutputTriacRunMethode
+        obj.data = data
+
+    @staticmethod
+    def FB_onboard_device_name(obj: RCU_MessageStructure, data: bytes):
+        RCU_API._RCU_API__SetQUERY(obj)
+        RCU_API._RCU_API__SetOnboardDevice(obj)
+        obj.sub_cmd_no = RCU_MessageStructureConstants.Sub_CMD_No.Query.OnboardDevice.FB_DeviceName
+        obj.data = data
+
+    @staticmethod
+    def FB_output_obj_feature(obj: RCU_MessageStructure, data: bytes):
+        RCU_API._RCU_API__SetQUERY(obj)
+        RCU_API._RCU_API__SetOnboardDevice(obj)
+        obj.sub_cmd_no = RCU_MessageStructureConstants.Sub_CMD_No.Query.OnboardDevice.FB_OutputObjFeature
+        obj.data = data

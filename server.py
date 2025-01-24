@@ -52,7 +52,6 @@ class RCUSimulator:
         if (query_msg.cmd_type_no == RCU_MessageStructureConstants.CMD_Type_No.Query and
             query_msg.cmd_no == RCU_MessageStructureConstants.CMD_No.General):
 
-            # Existing handlers
             if query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.General.Q_GTIN:
                 gtin = f"GTIN{random.randint(1000, 9999)}".encode('ascii')
                 print(f"Generated GTIN response: {gtin.decode()}")
@@ -68,7 +67,6 @@ class RCUSimulator:
                 print(f"Generated Version response: {version.decode()}")
                 RCU_API_Extended.FB_software_version(response_msg, version)
 
-            # New handlers
             elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.General.Q_Hardware_Version:
                 hw_version = f"HW{random.randint(1,9)}.{random.randint(0,9)}".encode('ascii')
                 print(f"Generated Hardware Version response: {hw_version.decode()}")
@@ -111,9 +109,78 @@ class RCUSimulator:
                 print(f"Generated Database Info response: {db_info.decode()}")
                 RCU_API_Extended.FB_database_info(response_msg, db_info)
 
-            if response_msg.cmd_type_no:  # If a response was created
-                print(f"Response message: {response_msg.Wrap().hex()}")
-                return response_msg
+        elif (query_msg.cmd_type_no == RCU_MessageStructureConstants.CMD_Type_No.Query and
+          query_msg.cmd_no == RCU_MessageStructureConstants.CMD_No.Eternet):
+        
+            if query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.Eternet.Q_EternetConfig:
+                # Generate sample Ethernet config (IP, MAC, etc.)
+                config = {
+                    'ip': f"192.168.{random.randint(1,254)}.{random.randint(1,254)}",
+                    'mac': ':'.join([f"{random.randint(0,255):02x}" for _ in range(6)]),
+                    'mask': "255.255.255.0",
+                    'gateway': "192.168.1.1"
+                }
+                config_str = f"{config['ip']};{config['mac']};{config['mask']};{config['gateway']}".encode('ascii')
+                print(f"Generated Ethernet config response: {config_str.decode()}")
+                RCU_API_Extended.FB_ethernet_config(response_msg, config_str)
+
+            # Handle Onboard Device queries
+        elif (query_msg.cmd_type_no == RCU_MessageStructureConstants.CMD_Type_No.Query and
+            query_msg.cmd_no == RCU_MessageStructureConstants.CMD_No.OnboardDevice):
+            
+            if query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.OnboardDevice.Q_ApplicationState:
+                    state = random.choice([b"RUNNING", b"IDLE", b"ERROR", b"INIT"])
+                    print(f"Generated Application State response: {state.decode()}")
+                    RCU_API_Extended.FB_application_state(response_msg, state)
+
+            elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.OnboardDevice.Q_Masthead:
+                masthead = f"RCU-{random.randint(1000,9999)}".encode('ascii')
+                print(f"Generated Masthead response: {masthead.decode()}")
+                RCU_API_Extended.FB_masthead(response_msg, masthead)
+
+            elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.OnboardDevice.Q_OutputGroups:
+                groups = bytes([random.randint(0,255) for _ in range(4)])  # 4 output groups
+                print(f"Generated Output Groups response: {groups.hex()}")
+                RCU_API_Extended.FB_output_groups(response_msg, groups)
+
+            elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.OnboardDevice.Q_InputGroups:
+                groups = bytes([random.randint(0,255) for _ in range(4)])  # 4 input groups
+                print(f"Generated Input Groups response: {groups.hex()}")
+                RCU_API_Extended.FB_input_groups(response_msg, groups)
+
+            elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.OnboardDevice.Q_InputInstanceBehaviour:
+                behavior = bytes([random.randint(0,3) for _ in range(8)])  # 8 instances
+                print(f"Generated Input Instance Behaviour response: {behavior.hex()}")
+                RCU_API_Extended.FB_input_instance_behaviour(response_msg, behavior)
+
+            elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.OnboardDevice.Q_OutputScenes:
+                scenes = bytes([random.randint(0,100) for _ in range(16)])  # 16 scenes
+                print(f"Generated Output Scenes response: {scenes.hex()}")
+                RCU_API_Extended.FB_output_scenes(response_msg, scenes)
+
+            elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.OnboardDevice.Q_OutputFeatures:
+                features = bytes([random.randint(0,255) for _ in range(4)])
+                print(f"Generated Output Features response: {features.hex()}")
+                RCU_API_Extended.FB_output_features(response_msg, features)
+
+            elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.OnboardDevice.Q_OutputTriacRunMethode:
+                method = bytes([random.randint(0,2)])  # 0=Leading, 1=Trailing, 2=Auto
+                print(f"Generated Output Triac Run Method response: {method.hex()}")
+                RCU_API_Extended.FB_output_triac_run_methode(response_msg, method)
+
+            elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.OnboardDevice.Q_DeviceName:
+                name = f"ONBOARD-{random.randint(1,999):03d}".encode('ascii')
+                print(f"Generated Onboard Device Name response: {name.decode()}")
+                RCU_API_Extended.FB_onboard_device_name(response_msg, name)
+
+            elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.OnboardDevice.Q_OutputObjFeature:
+                features = bytes([random.randint(0,255) for _ in range(4)])
+                print(f"Generated Output Object Features response: {features.hex()}")
+                RCU_API_Extended.FB_output_obj_feature(response_msg, features)
+
+        if response_msg.cmd_type_no:  
+            print(f"Response message: {response_msg.Wrap().hex()}")
+            return response_msg
 
         return None
 
