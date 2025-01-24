@@ -566,24 +566,24 @@ def run_client():
     print("  20 - Send Output Triac Run Method query")
     print("  21 - Send Onboard Device Name query")
     print("  22 - Send Output Object Feature query")
-    print("  28 - Send RTC Time and Date query")
-    print("  29 - Send GMT query")
-    print("  30 - Send Latitude/Longitude query")
-    print("  31 - Send Sunrise Time query")
-    print("  32 - Send Sunset Time query")
-    print("  33 - Send DALI Discovered Devices query")
-    print("  34 - Send DALI Device Masthead query")
-    print("  35 - Send DALI Gear NVM query")
-    print("  36 - Send DALI Gear RAM query")
-    print("  37 - Send DALI Input NVM query")
-    print("  38 - Send DALI Device Name query")
-    print("  39 - Send DALI Gear Feature query")
-    print("  40 - Send Occupancy Duration query")
-    print("  41 - Send Room Situation query")
-    print("  42 - Send Door Position query")
-    print("  43 - Send DND Summary query")
-    print("  44 - Send Modbus Device Masthead query")
-    print("  45 - Send Modbus Register Address query")
+    print("  23 - Send RTC Time and Date query")
+    print("  24 - Send GMT query")
+    print("  25 - Send Latitude/Longitude query")
+    print("  26 - Send Sunrise Time query")
+    print("  27 - Send Sunset Time query")
+    print("  28 - Send DALI Discovered Devices query")
+    print("  29 - Send DALI Device Masthead query")
+    print("  30 - Send DALI Gear NVM query")
+    print("  31 - Send DALI Gear RAM query")
+    print("  32 - Send DALI Input NVM query")
+    print("  33 - Send DALI Device Name query")
+    print("  34 - Send DALI Gear Feature query")
+    print("  35 - Send Occupancy Duration query")
+    print("  36 - Send Room Situation query")
+    print("  37 - Send Door Position query")
+    print("  38 - Send DND Summary query")
+    print("  39 - Send Modbus Device Masthead query")
+    print("  40 - Send Modbus Register Address query")
     print("  q - Quit")
 
     try:
@@ -636,41 +636,41 @@ def run_client():
                 query = create_onboard_device_name_query()
             elif command == '22':
                 query = create_output_obj_feature_query()
-            elif command == '28':
+            elif command == '23':
                 query = create_rtc_time_date_query()
-            elif command == '29':
+            elif command == '24':
                 query = create_gmt_query()
-            elif command == '30':
+            elif command == '25':
                 query = create_latitude_longitude_query()
-            elif command == '31':
+            elif command == '26':
                 query = create_sunrise_time_query()
-            elif command == '32':
+            elif command == '27':
                 query = create_sunset_time_query()
-            elif command == '33':
+            elif command == '28':
                 query = create_dali_discovered_devices_query()
-            elif command == '34':
+            elif command == '29':
                 query = create_dali_device_masthead_query()
-            elif command == '35':
+            elif command == '30':
                 query = create_dali_gear_nvm_query()
-            elif command == '36':
+            elif command == '31':
                 query = create_dali_gear_ram_query()
-            elif command == '37':
+            elif command == '32':
                 query = create_dali_input_nvm_query()
-            elif command == '38':
+            elif command == '33':
                 query = create_dali_device_name_query()
-            elif command == '39':
+            elif command == '34':
                 query = create_dali_gear_feature_query()
-            elif command == '40':
+            elif command == '35':
                 query = create_occupancy_duration_query()
-            elif command == '41':
+            elif command == '36':
                 query = create_room_situation_query()
-            elif command == '42':
+            elif command == '37':
                 query = create_door_position_query()
-            elif command == '43':
+            elif command == '38':
                 query = create_dnd_summary_query()
-            elif command == '44':
+            elif command == '39':
                 query = create_modbus_device_masthead_query()
-            elif command == '45':
+            elif command == '40':
                 query = create_modbus_register_address_query()
 
             if query:
