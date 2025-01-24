@@ -158,6 +158,137 @@ def create_output_obj_feature_query():
     print(f"\nCreated Output Object Feature query: {wrapped_msg.hex()}")
     return wrapped_msg
 
+# RTC Query Functions
+def create_rtc_time_date_query():
+    msg = RCU_MessageStructure()
+    RCU_API.Q_rtc_time_and_date(msg, bytes([]))
+    wrapped_msg = msg.Wrap()
+    print(f"\nCreated RTC Time and Date query: {wrapped_msg.hex()}")
+    return wrapped_msg
+
+def create_gmt_query():
+    msg = RCU_MessageStructure()
+    RCU_API.Q_gmt(msg, bytes([]))
+    wrapped_msg = msg.Wrap()
+    print(f"\nCreated GMT query: {wrapped_msg.hex()}")
+    return wrapped_msg
+
+def create_latitude_longitude_query():
+    msg = RCU_MessageStructure()
+    RCU_API.Q_latitude_and_longitude(msg, bytes([]))
+    wrapped_msg = msg.Wrap()
+    print(f"\nCreated Latitude/Longitude query: {wrapped_msg.hex()}")
+    return wrapped_msg
+
+def create_sunrise_time_query():
+    msg = RCU_MessageStructure()
+    RCU_API.Q_sunrise_time(msg, bytes([]))
+    wrapped_msg = msg.Wrap()
+    print(f"\nCreated Sunrise Time query: {wrapped_msg.hex()}")
+    return wrapped_msg
+
+def create_sunset_time_query():
+    msg = RCU_MessageStructure()
+    RCU_API.Q_sunset_time(msg, bytes([]))
+    wrapped_msg = msg.Wrap()
+    print(f"\nCreated Sunset Time query: {wrapped_msg.hex()}")
+    return wrapped_msg
+
+# DALI Query Functions
+def create_dali_discovered_devices_query():
+    msg = RCU_MessageStructure()
+    RCU_API.Q_dali_discovered_devices(msg, bytes([]))
+    wrapped_msg = msg.Wrap()
+    print(f"\nCreated DALI Discovered Devices query: {wrapped_msg.hex()}")
+    return wrapped_msg
+
+def create_dali_device_masthead_query():
+    msg = RCU_MessageStructure()
+    RCU_API.Q_dali_device_masthead(msg, bytes([0]))  # Query for first device
+    wrapped_msg = msg.Wrap()
+    print(f"\nCreated DALI Device Masthead query: {wrapped_msg.hex()}")
+    return wrapped_msg
+
+def create_dali_gear_nvm_query():
+    msg = RCU_MessageStructure()
+    RCU_API.Q_dali_gear_nvm(msg, bytes([0]))  # Query for first gear
+    wrapped_msg = msg.Wrap()
+    print(f"\nCreated DALI Gear NVM query: {wrapped_msg.hex()}")
+    return wrapped_msg
+
+def create_dali_gear_ram_query():
+    msg = RCU_MessageStructure()
+    RCU_API.Q_dali_gear_ram(msg, bytes([0]))  # Query for first gear
+    wrapped_msg = msg.Wrap()
+    print(f"\nCreated DALI Gear RAM query: {wrapped_msg.hex()}")
+    return wrapped_msg
+
+def create_dali_input_nvm_query():
+    msg = RCU_MessageStructure()
+    RCU_API.Q_dali_input_nvm(msg, bytes([0]))  # Query for first input
+    wrapped_msg = msg.Wrap()
+    print(f"\nCreated DALI Input NVM query: {wrapped_msg.hex()}")
+    return wrapped_msg
+
+def create_dali_device_name_query():
+    msg = RCU_MessageStructure()
+    RCU_API.Q_dali_device_name(msg, bytes([0]))  # Query for first device
+    wrapped_msg = msg.Wrap()
+    print(f"\nCreated DALI Device Name query: {wrapped_msg.hex()}")
+    return wrapped_msg
+
+def create_dali_gear_feature_query():
+    msg = RCU_MessageStructure()
+    RCU_API.Q_dali_gear_feature(msg, bytes([0]))  # Query for first gear
+    wrapped_msg = msg.Wrap()
+    print(f"\nCreated DALI Gear Feature query: {wrapped_msg.hex()}")
+    return wrapped_msg
+
+# Occupancy Query Functions
+def create_occupancy_duration_query():
+    msg = RCU_MessageStructure()
+    RCU_API.Q_occupancy_duration(msg, bytes([]))
+    wrapped_msg = msg.Wrap()
+    print(f"\nCreated Occupancy Duration query: {wrapped_msg.hex()}")
+    return wrapped_msg
+
+def create_room_situation_query():
+    msg = RCU_MessageStructure()
+    RCU_API.Q_room_situation(msg, bytes([]))
+    wrapped_msg = msg.Wrap()
+    print(f"\nCreated Room Situation query: {wrapped_msg.hex()}")
+    return wrapped_msg
+
+def create_door_position_query():
+    msg = RCU_MessageStructure()
+    RCU_API.Q_door_position(msg, bytes([]))
+    wrapped_msg = msg.Wrap()
+    print(f"\nCreated Door Position query: {wrapped_msg.hex()}")
+    return wrapped_msg
+
+# DND App Query Function
+def create_dnd_summary_query():
+    msg = RCU_MessageStructure()
+    RCU_API.Q_dnd_summary(msg, bytes([]))
+    wrapped_msg = msg.Wrap()
+    print(f"\nCreated DND Summary query: {wrapped_msg.hex()}")
+    return wrapped_msg
+
+# Modbus Query Functions
+def create_modbus_device_masthead_query():
+    msg = RCU_MessageStructure()
+    RCU_API.Q_modbus_device_masthead(msg, bytes([0]))  # Query for first device
+    wrapped_msg = msg.Wrap()
+    print(f"\nCreated Modbus Device Masthead query: {wrapped_msg.hex()}")
+    return wrapped_msg
+
+def create_modbus_register_address_query():
+    msg = RCU_MessageStructure()
+    RCU_API.Q_modbus_register_address(msg, bytes([0]))  # Query for first register
+    wrapped_msg = msg.Wrap()
+    print(f"\nCreated Modbus Register Address query: {wrapped_msg.hex()}")
+    return wrapped_msg
+
 def parse_message(message_bytes):
     try:
         print(f"\nParsing message: {message_bytes.hex()}")
@@ -169,14 +300,46 @@ def parse_message(message_bytes):
         print(f"Parsed message - Type: {msg.cmd_type_no.name}, CMD: {msg.cmd_no.name}, SubCMD: {msg.sub_cmd_no.name}")
 
         if msg.cmd_type_no == RCU_MessageStructureConstants.CMD_Type_No.Events:
+            # Handle Onboard Device Input Events
             if (msg.cmd_no == RCU_MessageStructureConstants.CMD_No.OnboardDevice and 
                 msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Events.OnboardDevice.InputEvents):
                 if len(msg.data) >= 2:
                     short_address = msg.data[0]
                     signal_type = msg.data[1]
                     addr_char = chr(short_address) if 65 <= short_address <= 76 else f"0x{short_address:02x}"
-                    return f"EVENT: Input from address {addr_char} ({short_address:02x}), signal type {signal_type} (0x{signal_type:02x})"
-                return f"EVENT: Invalid data length: {msg.data.hex()}"
+                    return f"EVENT: Onboard Input from address {addr_char} ({short_address:02x}), signal type {signal_type} (0x{signal_type:02x})"
+                return f"EVENT: Invalid Onboard Input data length: {msg.data.hex()}"
+
+            # Handle DALI Digidim Input Events
+            elif (msg.cmd_no == RCU_MessageStructureConstants.CMD_No.DALI and
+                msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Events.DALI.DigidimEvents):
+                if len(msg.data) >= 2:
+                    input_address = msg.data[0]
+                    input_state = msg.data[1]
+                    state_str = "ON" if input_state == 1 else "OFF"
+                    return f"EVENT: DALI Digidim Input address {input_address} state changed to {state_str}"
+                return f"EVENT: Invalid DALI Digidim Input data length: {msg.data.hex()}"
+
+            # Handle DALI Initialization Finished Events
+            elif (msg.cmd_no == RCU_MessageStructureConstants.CMD_No.DALI and
+                msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Events.DALI.InitializationProcessFinished):
+                if len(msg.data) >= 1:
+                    status = msg.data[0]
+                    status_str = "Success" if status == 0 else "Error"
+                    return f"EVENT: DALI Initialization Process Finished with status: {status_str}"
+                return f"EVENT: Invalid DALI Initialization data length: {msg.data.hex()}"
+
+            # Handle DALI Scan and Reset Finished Events
+            elif (msg.cmd_no == RCU_MessageStructureConstants.CMD_No.DALI and
+                msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Events.DALI.ScanAndResetProcessFinished):
+                if len(msg.data) >= 2:
+                    status = msg.data[0]
+                    devices_found = msg.data[1]
+                    status_str = "Success" if status == 0 else "Error"
+                    return f"EVENT: DALI Scan/Reset Process Finished - Status: {status_str}, Devices Found: {devices_found}"
+                return f"EVENT: Invalid DALI Scan/Reset data length: {msg.data.hex()}"
+
+            return f"EVENT: Unknown event type: CMD={msg.cmd_no.name}, SubCMD={msg.sub_cmd_no.name}"
                 
         elif msg.cmd_type_no == RCU_MessageStructureConstants.CMD_Type_No.Query:
             if msg.cmd_no == RCU_MessageStructureConstants.CMD_No.General:
@@ -269,6 +432,86 @@ def parse_message(message_bytes):
                 
                 return f"QUERY: Unknown sub-command: {msg.sub_cmd_no.name}"
 
+            elif msg.cmd_no == RCU_MessageStructureConstants.CMD_No.RTC:
+                if msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.Rtc.FB_RtcTimeAndDate:
+                    time_date = msg.data.decode('ascii').strip('\0\n')
+                    return f"QUERY RESPONSE: RTC Time and Date = {time_date}"
+                
+                elif msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.Rtc.FB_GMT:
+                    gmt = msg.data.decode('ascii').strip('\0\n')
+                    return f"QUERY RESPONSE: GMT Offset = {gmt}"
+                
+                elif msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.Rtc.FB_LatitudeAndLongtude:
+                    coords = msg.data.decode('ascii').strip('\0\n')
+                    return f"QUERY RESPONSE: Latitude/Longitude = {coords}"
+                
+                elif msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.Rtc.FB_SunriseTime:
+                    sunrise = msg.data.decode('ascii').strip('\0\n')
+                    return f"QUERY RESPONSE: Sunrise Time = {sunrise}"
+                
+                elif msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.Rtc.FB_SunsetTime:
+                    sunset = msg.data.decode('ascii').strip('\0\n')
+                    return f"QUERY RESPONSE: Sunset Time = {sunset}"
+
+            # Handle DALI responses
+            elif msg.cmd_no == RCU_MessageStructureConstants.CMD_No.DALI:
+                if msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.DALI.FB_DiscoveredDevNumberAndAddress:
+                    count, addr = msg.data[0], msg.data[1]
+                    return f"QUERY RESPONSE: DALI Discovered Devices = Count: {count}, Start Address: {addr}"
+                
+                elif msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.DALI.FB_DaliDeviceObjMastHead:
+                    masthead = msg.data.decode('ascii').strip('\0\n')
+                    return f"QUERY RESPONSE: DALI Device Masthead = {masthead}"
+                
+                elif msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.DALI.FB_GearNvmContent:
+                    nvm = ' '.join([f"0x{b:02x}" for b in msg.data])
+                    return f"QUERY RESPONSE: DALI Gear NVM Content = {nvm}"
+                
+                elif msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.DALI.FB_GearRamContent:
+                    ram = ' '.join([f"0x{b:02x}" for b in msg.data])
+                    return f"QUERY RESPONSE: DALI Gear RAM Content = {ram}"
+                
+                elif msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.DALI.FB_InputNvmContent:
+                    input_nvm = ' '.join([f"0x{b:02x}" for b in msg.data])
+                    return f"QUERY RESPONSE: DALI Input NVM Content = {input_nvm}"
+                
+                elif msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.DALI.FB_DeviceObjName:
+                    name = msg.data.decode('ascii').strip('\0\n')
+                    return f"QUERY RESPONSE: DALI Device Name = {name}"
+                
+                elif msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.DALI.FB_GearFeature:
+                    features = ' '.join([f"0x{b:02x}" for b in msg.data])
+                    return f"QUERY RESPONSE: DALI Gear Features = {features}"
+
+            # Handle Occupancy responses
+            elif msg.cmd_no == RCU_MessageStructureConstants.CMD_No.Occupancy:
+                if msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.Occupancy.FB_Duration:
+                    duration = msg.data.decode('ascii').strip('\0\n')
+                    return f"QUERY RESPONSE: Occupancy Duration = {duration} seconds"
+                
+                elif msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.Occupancy.FB_occupancy_room_situation:
+                    situation = msg.data.decode('ascii').strip('\0\n')
+                    return f"QUERY RESPONSE: Room Situation = {situation}"
+                
+                elif msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.Occupancy.FB_occupancy_door_position:
+                    position = msg.data.decode('ascii').strip('\0\n')
+                    return f"QUERY RESPONSE: Door Position = {position}"
+
+            # Handle DND App responses
+            elif msg.cmd_no == RCU_MessageStructureConstants.CMD_No.DND_App:
+                if msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.DND_App.FB_dndapp_summary:
+                    summary = msg.data.decode('ascii').strip('\0\n')
+                    return f"QUERY RESPONSE: DND Summary = {summary}"
+
+            # Handle Modbus responses
+            elif msg.cmd_no == RCU_MessageStructureConstants.CMD_No.Modbus:
+                if msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.Modbus.FB_modbus_device_masthead:
+                    masthead = msg.data.decode('ascii').strip('\0\n')
+                    return f"QUERY RESPONSE: Modbus Device Masthead = {masthead}"
+                
+                elif msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.Modbus.FB_modbus_dev_register_address_for_event:
+                    reg_addr = int.from_bytes(msg.data, 'little')
+                    return f"QUERY RESPONSE: Modbus Register Address = 0x{reg_addr:04x}"
         return f"Unknown message type: {msg.cmd_type_no.name}"
     except Exception as e:
         print(f"Error parsing message: {str(e)}")
@@ -323,6 +566,24 @@ def run_client():
     print("  20 - Send Output Triac Run Method query")
     print("  21 - Send Onboard Device Name query")
     print("  22 - Send Output Object Feature query")
+    print("  28 - Send RTC Time and Date query")
+    print("  29 - Send GMT query")
+    print("  30 - Send Latitude/Longitude query")
+    print("  31 - Send Sunrise Time query")
+    print("  32 - Send Sunset Time query")
+    print("  33 - Send DALI Discovered Devices query")
+    print("  34 - Send DALI Device Masthead query")
+    print("  35 - Send DALI Gear NVM query")
+    print("  36 - Send DALI Gear RAM query")
+    print("  37 - Send DALI Input NVM query")
+    print("  38 - Send DALI Device Name query")
+    print("  39 - Send DALI Gear Feature query")
+    print("  40 - Send Occupancy Duration query")
+    print("  41 - Send Room Situation query")
+    print("  42 - Send Door Position query")
+    print("  43 - Send DND Summary query")
+    print("  44 - Send Modbus Device Masthead query")
+    print("  45 - Send Modbus Register Address query")
     print("  q - Quit")
 
     try:
@@ -375,6 +636,42 @@ def run_client():
                 query = create_onboard_device_name_query()
             elif command == '22':
                 query = create_output_obj_feature_query()
+            elif command == '28':
+                query = create_rtc_time_date_query()
+            elif command == '29':
+                query = create_gmt_query()
+            elif command == '30':
+                query = create_latitude_longitude_query()
+            elif command == '31':
+                query = create_sunrise_time_query()
+            elif command == '32':
+                query = create_sunset_time_query()
+            elif command == '33':
+                query = create_dali_discovered_devices_query()
+            elif command == '34':
+                query = create_dali_device_masthead_query()
+            elif command == '35':
+                query = create_dali_gear_nvm_query()
+            elif command == '36':
+                query = create_dali_gear_ram_query()
+            elif command == '37':
+                query = create_dali_input_nvm_query()
+            elif command == '38':
+                query = create_dali_device_name_query()
+            elif command == '39':
+                query = create_dali_gear_feature_query()
+            elif command == '40':
+                query = create_occupancy_duration_query()
+            elif command == '41':
+                query = create_room_situation_query()
+            elif command == '42':
+                query = create_door_position_query()
+            elif command == '43':
+                query = create_dnd_summary_query()
+            elif command == '44':
+                query = create_modbus_device_masthead_query()
+            elif command == '45':
+                query = create_modbus_register_address_query()
 
             if query:
                 client_socket.send(query)

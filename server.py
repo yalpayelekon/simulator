@@ -44,6 +44,59 @@ class RCUSimulator:
         print(f"Message details - Type: {msg.cmd_type_no.name}, CMD: {msg.cmd_no.name}, SubCMD: {msg.sub_cmd_no.name}")
         print(f"Data: {msg.data.hex()}")
         return msg
+    
+    def create_event_dali_digidim_inputs(self):
+        msg = RCU_MessageStructure()
+        input_address = random.randint(0, 15)  # DALI input device address (0-15)
+        input_state = random.randint(0, 1)     # Input state (0=OFF, 1=ON)
+        data = bytes([input_address, input_state])
+        print(f"Creating DALI Digidim input event with address={input_address}, state={input_state}")
+        
+        msg.cmd_type_no = RCU_MessageStructureConstants.CMD_Type_No.Events
+        msg.cmd_no = RCU_MessageStructureConstants.CMD_No.DALI
+        msg.sub_cmd_no = RCU_MessageStructureConstants.Sub_CMD_No.Events.DALI.DigidimEvents
+        msg.data = data
+        
+        wrapped_msg = msg.Wrap()
+        print(f"Created DALI Digidim event message: {wrapped_msg.hex()}")
+        print(f"Message details - Type: {msg.cmd_type_no.name}, CMD: {msg.cmd_no.name}, SubCMD: {msg.sub_cmd_no.name}")
+        print(f"Data: {msg.data.hex()}")
+        return msg
+
+    def create_event_dali_initialization_finished(self):
+        msg = RCU_MessageStructure()
+        status = random.randint(0, 1)  # 0=Success, 1=Error
+        data = bytes([status])
+        print(f"Creating DALI initialization finished event with status={status}")
+        
+        msg.cmd_type_no = RCU_MessageStructureConstants.CMD_Type_No.Events
+        msg.cmd_no = RCU_MessageStructureConstants.CMD_No.DALI
+        msg.sub_cmd_no = RCU_MessageStructureConstants.Sub_CMD_No.Events.DALI.InitializationProcessFinished
+        msg.data = data
+        
+        wrapped_msg = msg.Wrap()
+        print(f"Created DALI initialization finished event message: {wrapped_msg.hex()}")
+        print(f"Message details - Type: {msg.cmd_type_no.name}, CMD: {msg.cmd_no.name}, SubCMD: {msg.sub_cmd_no.name}")
+        print(f"Data: {msg.data.hex()}")
+        return msg
+
+    def create_event_dali_scan_reset_finished(self):
+        msg = RCU_MessageStructure()
+        status = random.randint(0, 1)  # 0=Success, 1=Error
+        devices_found = random.randint(0, 64)  # Number of DALI devices found
+        data = bytes([status, devices_found])
+        print(f"Creating DALI scan/reset finished event with status={status}, devices={devices_found}")
+        
+        msg.cmd_type_no = RCU_MessageStructureConstants.CMD_Type_No.Events
+        msg.cmd_no = RCU_MessageStructureConstants.CMD_No.DALI
+        msg.sub_cmd_no = RCU_MessageStructureConstants.Sub_CMD_No.Events.DALI.ScanAndResetProcessFinished
+        msg.data = data
+        
+        wrapped_msg = msg.Wrap()
+        print(f"Created DALI scan/reset finished event message: {wrapped_msg.hex()}")
+        print(f"Message details - Type: {msg.cmd_type_no.name}, CMD: {msg.cmd_no.name}, SubCMD: {msg.sub_cmd_no.name}")
+        print(f"Data: {msg.data.hex()}")
+        return msg
 
     def handle_query(self, query_msg: RCU_MessageStructure):
         print(f"\nHandling query - Type: {query_msg.cmd_type_no.name}, CMD: {query_msg.cmd_no.name}, SubCMD: {query_msg.sub_cmd_no.name}")
@@ -178,71 +231,115 @@ class RCUSimulator:
                 print(f"Generated Output Object Features response: {features.hex()}")
                 RCU_API_Extended.FB_output_obj_feature(response_msg, features)
         elif (query_msg.cmd_type_no == RCU_MessageStructureConstants.CMD_Type_No.Query and
-            query_msg.cmd_no == RCU_MessageStructureConstants.CMD_No.RTC):
+          query_msg.cmd_no == RCU_MessageStructureConstants.CMD_No.RTC):
 
             if query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.Rtc.Q_RtcTimeAndDate:
-                #TODO
-                RCU_API_Extended.FB_RTC_time_and_date(response_msg, filldata)
+                time_date = time.strftime("%Y-%m-%d %H:%M:%S").encode('ascii')
+                print(f"Generated RTC Time and Date response: {time_date.decode()}")
+                RCU_API_Extended.FB_RTC_time_and_date(response_msg, time_date)
+
             elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.Rtc.Q_GMT:
-                #TODO
-                RCU_API_Extended.FB_GMT(response_msg, filldata)
+                gmt_offset = "+02:00".encode('ascii')  # Example GMT offset
+                print(f"Generated GMT response: {gmt_offset.decode()}")
+                RCU_API_Extended.FB_GMT(response_msg, gmt_offset)
+
             elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.Rtc.Q_LatitudeAndLongtude:
-                #TODO
-                RCU_API_Extended.FB_latitude_and_longitude(response_msg, filldata)
+                coords = "51.5074,0.1278".encode('ascii')  # Example coordinates
+                print(f"Generated Latitude/Longitude response: {coords.decode()}")
+                RCU_API_Extended.FB_latitude_and_longitude(response_msg, coords)
+
             elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.Rtc.Q_SunriseTime:
-                #TODO
-                RCU_API_Extended.FB_sunrise_time(response_msg, filldata)
+                sunrise = "06:30".encode('ascii')
+                print(f"Generated Sunrise Time response: {sunrise.decode()}")
+                RCU_API_Extended.FB_sunrise_time(response_msg, sunrise)
+
             elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.Rtc.Q_SunsetTime:
-                #TODO
-                RCU_API_Extended.FB_sunset_time(response_msg, filldata)
+                sunset = "20:15".encode('ascii')
+                print(f"Generated Sunset Time response: {sunset.decode()}")
+                RCU_API_Extended.FB_sunset_time(response_msg, sunset)
+
+    # Handle DALI queries
         elif (query_msg.cmd_type_no == RCU_MessageStructureConstants.CMD_Type_No.Query and
             query_msg.cmd_no == RCU_MessageStructureConstants.CMD_No.DALI):
+
             if query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.DALI.Q_DiscoveredDevNumberAndAddress:
-                #TODO
-                RCU_API_Extended.FB_dali_device_discovered_sadd(response_msg, filldata)
+                device_info = bytes([random.randint(1, 64), random.randint(0, 63)])  # [device_count, start_address]
+                print(f"Generated DALI Device Discovery response: Count={device_info[0]}, StartAddr={device_info[1]}")
+                RCU_API_Extended.FB_dali_device_discovered_sadd(response_msg, device_info)
+
             elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.DALI.Q_DaliDeviceObjMastHead:
-                #TODO
-                RCU_API_Extended.FB_dali_device_masthead(response_msg, filldata)
+                masthead = f"DALI_DEV_{random.randint(1,999):03d}".encode('ascii')
+                print(f"Generated DALI Device Masthead response: {masthead.decode()}")
+                RCU_API_Extended.FB_dali_device_masthead(response_msg, masthead)
+
             elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.DALI.Q_GearNvmContent:
-                #TODO
-                RCU_API_Extended.FB_dali_gear_nvm_content(response_msg, filldata)
+                nvm_data = bytes([random.randint(0, 255) for _ in range(16)])
+                print(f"Generated DALI Gear NVM Content response: {nvm_data.hex()}")
+                RCU_API_Extended.FB_dali_gear_nvm_content(response_msg, nvm_data)
+
             elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.DALI.Q_GearRamContent:
-                #TODO
-                RCU_API_Extended.FB_dali_gear_ram_content(response_msg, filldata)
+                ram_data = bytes([random.randint(0, 255) for _ in range(16)])
+                print(f"Generated DALI Gear RAM Content response: {ram_data.hex()}")
+                RCU_API_Extended.FB_dali_gear_ram_content(response_msg, ram_data)
+
             elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.DALI.Q_InputNvmContent:
-                #TODO
-                RCU_API_Extended.FB_dali_input_nvm_content(response_msg, filldata)
+                input_data = bytes([random.randint(0, 255) for _ in range(8)])
+                print(f"Generated DALI Input NVM Content response: {input_data.hex()}")
+                RCU_API_Extended.FB_dali_input_nvm_content(response_msg, input_data)
+
             elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.DALI.Q_DeviceObjName:
-                #TODO
-                RCU_API_Extended.FB_dali_device_obj_name(response_msg, filldata)
+                name = f"DALI_{random.randint(1,999):03d}".encode('ascii')
+                print(f"Generated DALI Device Object Name response: {name.decode()}")
+                RCU_API_Extended.FB_dali_device_obj_name(response_msg, name)
+
             elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.DALI.Q_GearObjFeature:
-                #TODO
-                RCU_API_Extended.FB_dali_gear_feature(response_msg, filldata)
+                features = bytes([random.randint(0, 255) for _ in range(4)])
+                print(f"Generated DALI Gear Feature response: {features.hex()}")
+                RCU_API_Extended.FB_dali_gear_feature(response_msg, features)
+
+        # Handle Occupancy queries
         elif (query_msg.cmd_type_no == RCU_MessageStructureConstants.CMD_Type_No.Query and
             query_msg.cmd_no == RCU_MessageStructureConstants.CMD_No.Occupancy):
+
             if query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.Occupancy.Q_Duration:
-                #TODO
-                RCU_API_Extended.FB_ocuupancy_duration(response_msg, filldata)
+                duration = str(random.randint(30, 300)).encode('ascii')  # 30-300 seconds
+                print(f"Generated Occupancy Duration response: {duration.decode()} seconds")
+                RCU_API_Extended.FB_ocuupancy_duration(response_msg, duration)
+
             elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.Occupancy.Q_occupancy_room_situation:
-                #TODO
-                RCU_API_Extended.FB_occupancy_room_situation(response_msg, filldata)
+                situation = random.choice([b"OCCUPIED", b"VACANT", b"UNKNOWN"])
+                print(f"Generated Room Situation response: {situation.decode()}")
+                RCU_API_Extended.FB_occupancy_room_situation(response_msg, situation)
+
             elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.Occupancy.Q_occupancy_door_position:
-                #TODO
-                RCU_API_Extended.FB_occupancy_door_position(response_msg, filldata)
+                position = random.choice([b"OPEN", b"CLOSED", b"UNKNOWN"])
+                print(f"Generated Door Position response: {position.decode()}")
+                RCU_API_Extended.FB_occupancy_door_position(response_msg, position)
+
+        # Handle DND_App queries
         elif (query_msg.cmd_type_no == RCU_MessageStructureConstants.CMD_Type_No.Query and
             query_msg.cmd_no == RCU_MessageStructureConstants.CMD_No.DND_App):
+
             if query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.DND_App.Q_dndapp_summary:
-                #TODO
-                RCU_API_Extended.FB_dndapp_summary(response_msg, filldata)
+                summary = f"DND_STATUS_{random.choice(['ACTIVE', 'INACTIVE'])}".encode('ascii')
+                print(f"Generated DND App Summary response: {summary.decode()}")
+                RCU_API_Extended.FB_dndapp_summary(response_msg, summary)
+
+        # Handle Modbus queries
         elif (query_msg.cmd_type_no == RCU_MessageStructureConstants.CMD_Type_No.Query and
             query_msg.cmd_no == RCU_MessageStructureConstants.CMD_No.Modbus):
+
             if query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.Modbus.Q_modbus_device_masthead:
-                #TODO
-                RCU_API_Extended.FB_modbus_device_masthead(response_msg, filldata)
+                masthead = f"MODBUS_DEV_{random.randint(1,999):03d}".encode('ascii')
+                print(f"Generated Modbus Device Masthead response: {masthead.decode()}")
+                RCU_API_Extended.FB_modbus_device_masthead(response_msg, masthead)
+
             elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.Modbus.Q_modbus_dev_register_address_for_event:
-                #TODO
-                RCU_API_Extended.FB_modbus_device_reg_add(response_msg, filldata)
-        if response_msg.cmd_type_no:  
+                reg_addr = bytes([random.randint(0, 255) for _ in range(2)])  # 2-byte register address
+                print(f"Generated Modbus Device Register Address response: {reg_addr.hex()}")
+                RCU_API_Extended.FB_modbus_device_reg_add(response_msg, reg_addr)
+
+        if response_msg.cmd_type_no:
             print(f"Response message: {response_msg.Wrap().hex()}")
             return response_msg
 
@@ -302,10 +399,25 @@ def handle_client(client_socket, addr, message_queue, rcu_simulator):
 def send_events(client_socket, message_queue, rcu_simulator):
     try:
         while not client_socket._closed:
-            event_message = rcu_simulator.create_event_onboard_inputs()
+            # Randomly choose which event to send
+            event_type = random.randint(0, 3)
+            
+            if event_type == 0:
+                event_message = rcu_simulator.create_event_onboard_inputs()
+            elif event_type == 1:
+                event_message = rcu_simulator.create_event_dali_digidim_inputs()
+            elif event_type == 2:
+                event_message = rcu_simulator.create_event_dali_initialization_finished()
+            else:  # event_type == 3
+                event_message = rcu_simulator.create_event_dali_scan_reset_finished()
+            
             priority_message = PriorityMessage(PRIORITY_EVENT, event_message, client_socket)
             message_queue.put(priority_message)
-            time.sleep(7.1)
+            
+            # Random delay between 5 and 10 seconds between events
+            delay = random.uniform(5.0, 10.0)
+            time.sleep(delay)
+            
     except Exception as e:
         if not client_socket._closed:
             print(f"Error in event sender: {str(e)}")
