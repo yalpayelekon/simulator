@@ -177,7 +177,71 @@ class RCUSimulator:
                 features = bytes([random.randint(0,255) for _ in range(4)])
                 print(f"Generated Output Object Features response: {features.hex()}")
                 RCU_API_Extended.FB_output_obj_feature(response_msg, features)
+        elif (query_msg.cmd_type_no == RCU_MessageStructureConstants.CMD_Type_No.Query and
+            query_msg.cmd_no == RCU_MessageStructureConstants.CMD_No.RTC):
 
+            if query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.Rtc.Q_RtcTimeAndDate:
+                #TODO
+                RCU_API_Extended.FB_RTC_time_and_date(response_msg, filldata)
+            elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.Rtc.Q_GMT:
+                #TODO
+                RCU_API_Extended.FB_GMT(response_msg, filldata)
+            elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.Rtc.Q_LatitudeAndLongtude:
+                #TODO
+                RCU_API_Extended.FB_latitude_and_longitude(response_msg, filldata)
+            elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.Rtc.Q_SunriseTime:
+                #TODO
+                RCU_API_Extended.FB_sunrise_time(response_msg, filldata)
+            elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.Rtc.Q_SunsetTime:
+                #TODO
+                RCU_API_Extended.FB_sunset_time(response_msg, filldata)
+        elif (query_msg.cmd_type_no == RCU_MessageStructureConstants.CMD_Type_No.Query and
+            query_msg.cmd_no == RCU_MessageStructureConstants.CMD_No.DALI):
+            if query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.DALI.Q_DiscoveredDevNumberAndAddress:
+                #TODO
+                RCU_API_Extended.FB_dali_device_discovered_sadd(response_msg, filldata)
+            elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.DALI.Q_DaliDeviceObjMastHead:
+                #TODO
+                RCU_API_Extended.FB_dali_device_masthead(response_msg, filldata)
+            elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.DALI.Q_GearNvmContent:
+                #TODO
+                RCU_API_Extended.FB_dali_gear_nvm_content(response_msg, filldata)
+            elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.DALI.Q_GearRamContent:
+                #TODO
+                RCU_API_Extended.FB_dali_gear_ram_content(response_msg, filldata)
+            elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.DALI.Q_InputNvmContent:
+                #TODO
+                RCU_API_Extended.FB_dali_input_nvm_content(response_msg, filldata)
+            elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.DALI.Q_DeviceObjName:
+                #TODO
+                RCU_API_Extended.FB_dali_device_obj_name(response_msg, filldata)
+            elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.DALI.Q_GearObjFeature:
+                #TODO
+                RCU_API_Extended.FB_dali_gear_feature(response_msg, filldata)
+        elif (query_msg.cmd_type_no == RCU_MessageStructureConstants.CMD_Type_No.Query and
+            query_msg.cmd_no == RCU_MessageStructureConstants.CMD_No.Occupancy):
+            if query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.Occupancy.Q_Duration:
+                #TODO
+                RCU_API_Extended.FB_ocuupancy_duration(response_msg, filldata)
+            elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.Occupancy.Q_occupancy_room_situation:
+                #TODO
+                RCU_API_Extended.FB_occupancy_room_situation(response_msg, filldata)
+            elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.Occupancy.Q_occupancy_door_position:
+                #TODO
+                RCU_API_Extended.FB_occupancy_door_position(response_msg, filldata)
+        elif (query_msg.cmd_type_no == RCU_MessageStructureConstants.CMD_Type_No.Query and
+            query_msg.cmd_no == RCU_MessageStructureConstants.CMD_No.DND_App):
+            if query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.DND_App.Q_dndapp_summary:
+                #TODO
+                RCU_API_Extended.FB_dndapp_summary(response_msg, filldata)
+        elif (query_msg.cmd_type_no == RCU_MessageStructureConstants.CMD_Type_No.Query and
+            query_msg.cmd_no == RCU_MessageStructureConstants.CMD_No.Modbus):
+            if query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.Modbus.Q_modbus_device_masthead:
+                #TODO
+                RCU_API_Extended.FB_modbus_device_masthead(response_msg, filldata)
+            elif query_msg.sub_cmd_no == RCU_MessageStructureConstants.Sub_CMD_No.Query.Modbus.Q_modbus_dev_register_address_for_event:
+                #TODO
+                RCU_API_Extended.FB_modbus_device_reg_add(response_msg, filldata)
         if response_msg.cmd_type_no:  
             print(f"Response message: {response_msg.Wrap().hex()}")
             return response_msg
@@ -241,7 +305,7 @@ def send_events(client_socket, message_queue, rcu_simulator):
             event_message = rcu_simulator.create_event_onboard_inputs()
             priority_message = PriorityMessage(PRIORITY_EVENT, event_message, client_socket)
             message_queue.put(priority_message)
-            time.sleep(3.1)
+            time.sleep(7.1)
     except Exception as e:
         if not client_socket._closed:
             print(f"Error in event sender: {str(e)}")
