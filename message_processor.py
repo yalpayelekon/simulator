@@ -10,9 +10,8 @@ def process_message_queue(message_queue, rcu_simulator):
                     print("\nProcessing query message...")
                     response = rcu_simulator.handle_query(priority_message.message)
                     if response:
-                        wrapped_response = response.Wrap()
-                        print(f"Sending response: {wrapped_response.hex()}")
-                        priority_message.client_socket.send(wrapped_response)
+                        print(f"Sending response: {response.hex()}")
+                        priority_message.client_socket.send(response)  # Send the wrapped response directly
                 
                 elif priority_message.priority == PRIORITY_EVENT:
                     print("\nProcessing event message...")

@@ -1,7 +1,7 @@
 import random
 from rcu_lib_module.RCU_protocol import RCU_MessageStructure, RCU_MessageStructureConstants
 
-def create_event_onboard_inputs(self):
+def create_event_onboard_inputs():
     msg = RCU_MessageStructure()
     short_address = random.randint(65, 76)
     signal_type = random.randint(0, 255)
@@ -19,10 +19,10 @@ def create_event_onboard_inputs(self):
     print(f"Data: {msg.data.hex()}")
     return msg
 
-def create_event_dali_digidim_inputs(self):
+def create_event_dali_digidim_inputs():
     msg = RCU_MessageStructure()
-    input_address = random.randint(0, 15)  # DALI input device address (0-15)
-    input_state = random.randint(0, 1)     # Input state (0=OFF, 1=ON)
+    input_address = random.randint(0, 15)
+    input_state = random.randint(0, 1)
     data = bytes([input_address, input_state])
     print(f"Creating DALI Digidim input event with address={input_address}, state={input_state}")
     
@@ -37,7 +37,7 @@ def create_event_dali_digidim_inputs(self):
     print(f"Data: {msg.data.hex()}")
     return msg
 
-def create_event_dali_initialization_finished(self):
+def create_event_dali_initialization_finished():
     msg = RCU_MessageStructure()
     status = random.randint(0, 1)  # 0=Success, 1=Error
     data = bytes([status])
@@ -54,7 +54,7 @@ def create_event_dali_initialization_finished(self):
     print(f"Data: {msg.data.hex()}")
     return msg
 
-def create_event_dali_scan_reset_finished(self):
+def create_event_dali_scan_reset_finished():
     msg = RCU_MessageStructure()
     status = random.randint(0, 1)  # 0=Success, 1=Error
     devices_found = random.randint(0, 64)  # Number of DALI devices found
