@@ -161,14 +161,14 @@ def create_output_obj_feature_query():
 # RTC Query Functions
 def create_rtc_time_date_query():
     msg = RCU_MessageStructure()
-    RCU_API.Q_rtc_time_and_date(msg, bytes([]))
+    RCU_API.Q_RTC_time_and_date(msg, bytes([]))
     wrapped_msg = msg.Wrap()
     print(f"\nCreated RTC Time and Date query: {wrapped_msg.hex()}")
     return wrapped_msg
 
 def create_gmt_query():
     msg = RCU_MessageStructure()
-    RCU_API.Q_gmt(msg, bytes([]))
+    RCU_API.Q_GMT(msg, bytes([]))
     wrapped_msg = msg.Wrap()
     print(f"\nCreated GMT query: {wrapped_msg.hex()}")
     return wrapped_msg
@@ -197,7 +197,7 @@ def create_sunset_time_query():
 # DALI Query Functions
 def create_dali_discovered_devices_query():
     msg = RCU_MessageStructure()
-    RCU_API.Q_dali_discovered_devices(msg, bytes([]))
+    RCU_API.Q_dali_device_discovered_sadd(msg, bytes([]))
     wrapped_msg = msg.Wrap()
     print(f"\nCreated DALI Discovered Devices query: {wrapped_msg.hex()}")
     return wrapped_msg
@@ -535,6 +535,9 @@ def receive_messages(client_socket):
     client_socket.close()
 
 def run_client():
+    import random
+    import time
+
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client_socket.connect(('localhost', 5001))
 
@@ -542,145 +545,71 @@ def run_client():
     receive_thread.daemon = True
     receive_thread.start()
 
-    print("\nConnected to server.")
-    print("Commands:")
-    print("  1 - Send GTIN query")
-    print("  2 - Send Serial Number query")
-    print("  3 - Send Version query")
-    print("  4 - Send Hardware Version query")
-    print("  5 - Send SW Commit SHA query")
-    print("  6 - Send SW Author query")
-    print("  7 - Send Last Commit Date query")
-    print("  8 - Send Power Source Period query")
-    print("  9 - Send Device Name query")
-    print("  10 - Send Hardfault1 query")
-    print("  11 - Send Database Info query")
-    print("  12 - Send Ethernet Config query")
-    print("  13 - Send Application State query")
-    print("  14 - Send Masthead query")
-    print("  15 - Send Output Groups query")
-    print("  16 - Send Input Groups query")
-    print("  17 - Send Input Instance Behaviour query")
-    print("  18 - Send Output Scenes query")
-    print("  19 - Send Output Features query")
-    print("  20 - Send Output Triac Run Method query")
-    print("  21 - Send Onboard Device Name query")
-    print("  22 - Send Output Object Feature query")
-    print("  23 - Send RTC Time and Date query")
-    print("  24 - Send GMT query")
-    print("  25 - Send Latitude/Longitude query")
-    print("  26 - Send Sunrise Time query")
-    print("  27 - Send Sunset Time query")
-    print("  28 - Send DALI Discovered Devices query")
-    print("  29 - Send DALI Device Masthead query")
-    print("  30 - Send DALI Gear NVM query")
-    print("  31 - Send DALI Gear RAM query")
-    print("  32 - Send DALI Input NVM query")
-    print("  33 - Send DALI Device Name query")
-    print("  34 - Send DALI Gear Feature query")
-    print("  35 - Send Occupancy Duration query")
-    print("  36 - Send Room Situation query")
-    print("  37 - Send Door Position query")
-    print("  38 - Send DND Summary query")
-    print("  39 - Send Modbus Device Masthead query")
-    print("  40 - Send Modbus Register Address query")
-    print("  q - Quit")
+    print("\nConnected to server. Starting automated query test...")
+
+    # Dictionary of all query functions
+    query_functions = {
+        'GTIN': create_gtin_query,
+        'Serial Number': create_serial_query,
+        'Version': create_version_query,
+        'Hardware Version': create_hardware_version_query,
+        'SW Commit SHA': create_sw_commit_sha_query,
+        'SW Author': create_sw_author_query,
+        'Last Commit Date': create_last_commit_date_query,
+        'Power Source Period': create_power_source_period_query,
+        'Device Name': create_device_name_query,
+        'Hardfault1': create_hardfault1_query,
+        'Database Info': create_database_info_query,
+        'Ethernet Config': create_ethernet_config_query,
+        'Application State': create_application_state_query,
+        'Masthead': create_masthead_query,
+        'Output Groups': create_output_groups_query,
+        'Input Groups': create_input_groups_query,
+        'Input Instance Behaviour': create_input_instance_behaviour_query,
+        'Output Scenes': create_output_scenes_query,
+        'Output Features': create_output_features_query,
+        'Output Triac Run Method': create_output_triac_run_methode_query,
+        'Onboard Device Name': create_onboard_device_name_query,
+        'Output Object Feature': create_output_obj_feature_query,
+        'RTC Time and Date': create_rtc_time_date_query,
+        'GMT': create_gmt_query,
+        'Latitude/Longitude': create_latitude_longitude_query,
+        'Sunrise Time': create_sunrise_time_query,
+        'Sunset Time': create_sunset_time_query,
+        'DALI Discovered Devices': create_dali_discovered_devices_query,
+        'DALI Device Masthead': create_dali_device_masthead_query,
+        'DALI Gear NVM': create_dali_gear_nvm_query,
+        'DALI Gear RAM': create_dali_gear_ram_query,
+        'DALI Input NVM': create_dali_input_nvm_query,
+        'DALI Device Name': create_dali_device_name_query,
+        'DALI Gear Feature': create_dali_gear_feature_query,
+        'Occupancy Duration': create_occupancy_duration_query,
+        'Room Situation': create_room_situation_query,
+        'Door Position': create_door_position_query,
+        'DND Summary': create_dnd_summary_query,
+        'Modbus Device Masthead': create_modbus_device_masthead_query,
+        'Modbus Register Address': create_modbus_register_address_query
+    }
 
     try:
-        while True:
-            command = input("Enter command: ")
-            if command.lower() == 'q':
-                break
-            query = None
-            if command == '1':
-                query = create_gtin_query()
-            elif command == '2':
-                query = create_serial_query()
-            elif command == '3':
-                query = create_version_query()
-            elif command == '4':
-                query = create_hardware_version_query()
-            elif command == '5':
-                query = create_sw_commit_sha_query()
-            elif command == '6':
-                query = create_sw_author_query()
-            elif command == '7':
-                query = create_last_commit_date_query()
-            elif command == '8':
-                query = create_power_source_period_query()
-            elif command == '9':
-                query = create_device_name_query()
-            elif command == '10':
-                query = create_hardfault1_query()
-            elif command == '11':
-                query = create_database_info_query()
-            elif command == '12':
-                query = create_ethernet_config_query()
-            elif command == '13':
-                query = create_application_state_query()
-            elif command == '14':
-                query = create_masthead_query()
-            elif command == '15':
-                query = create_output_groups_query()
-            elif command == '16':
-                query = create_input_groups_query()
-            elif command == '17':
-                query = create_input_instance_behaviour_query()
-            elif command == '18':
-                query = create_output_scenes_query()
-            elif command == '19':
-                query = create_output_features_query()
-            elif command == '20':
-                query = create_output_triac_run_methode_query()
-            elif command == '21':
-                query = create_onboard_device_name_query()
-            elif command == '22':
-                query = create_output_obj_feature_query()
-            elif command == '23':
-                query = create_rtc_time_date_query()
-            elif command == '24':
-                query = create_gmt_query()
-            elif command == '25':
-                query = create_latitude_longitude_query()
-            elif command == '26':
-                query = create_sunrise_time_query()
-            elif command == '27':
-                query = create_sunset_time_query()
-            elif command == '28':
-                query = create_dali_discovered_devices_query()
-            elif command == '29':
-                query = create_dali_device_masthead_query()
-            elif command == '30':
-                query = create_dali_gear_nvm_query()
-            elif command == '31':
-                query = create_dali_gear_ram_query()
-            elif command == '32':
-                query = create_dali_input_nvm_query()
-            elif command == '33':
-                query = create_dali_device_name_query()
-            elif command == '34':
-                query = create_dali_gear_feature_query()
-            elif command == '35':
-                query = create_occupancy_duration_query()
-            elif command == '36':
-                query = create_room_situation_query()
-            elif command == '37':
-                query = create_door_position_query()
-            elif command == '38':
-                query = create_dnd_summary_query()
-            elif command == '39':
-                query = create_modbus_device_masthead_query()
-            elif command == '40':
-                query = create_modbus_register_address_query()
+        for query_name, query_func in query_functions.items():
+            # Generate random delay between 0 and 2 seconds
+            delay = random.uniform(0, 1)
+            
+            print(f"\nSending {query_name} query...")
+            query = query_func()
+            client_socket.send(query)
+            
+            print(f"Waiting {delay:.2f} seconds...")
+            time.sleep(delay)
 
-            if query:
-                client_socket.send(query)
-                print("Query sent")
-            else:
-                print("Invalid command")
-    except KeyboardInterrupt:
-        print("\nDisconnecting from server...")
+        print("\nAll queries sent. Waiting for final responses...")
+        time.sleep(2)  # Wait for final responses
+        
+    except Exception as e:
+        print(f"\nError during testing: {str(e)}")
     finally:
+        print("\nDisconnecting from server...")
         client_socket.close()
 
 if __name__ == "__main__":

@@ -415,7 +415,7 @@ def send_events(client_socket, message_queue, rcu_simulator):
             message_queue.put(priority_message)
             
             # Random delay between 5 and 10 seconds between events
-            delay = random.uniform(5.0, 10.0)
+            delay = random.uniform(1.0, 3.0)
             time.sleep(delay)
             
     except Exception as e:
